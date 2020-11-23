@@ -3,8 +3,23 @@ name: Build WiX Setup
 on: [workflow_dispatch]
 
 jobs:
+  # Create code signing certificate
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create certificate with OpenSSL
+        run: |
+          echo "${{secrets.YV_CODESIGN_CERT}}" > codesign.crt
+          echo "${{secrets.YV_CODESIGN_PKEY}}" > codesign.key
+          openssl pkcs12 -export -out codesign.pfx -inkey codesign.key -in codesign.crt -passin pass:${{secrets.YV_CODESIGN_PKEY_PASS}} -passout pass:${{secrets.YV_CODESIGN_PFX_PASS}}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: certificate
+          path: codesign.pfx
+          
+  # Build WiX setup
   build:
-
+    needs: [import]
     runs-on: [windows-latest]
 
     steps:
@@ -22,8 +37,12 @@ jobs:
       run: nuget restore -SolutionDirectory $Env:GITHUB_WORKSPACE
 #    - name: Restore NuGet packages (ProjectSetup)
 #      run: msbuild $Env:GITHUB_WORKSPACE\setup\ProjectSetup.wixproj /t:RestorePackages
+    - uses: actions/download-artifact@v2
+      with: 
+        name: certificate
     - name: Build with msbuild
-      run: msbuild $Env:GITHUB_WORKSPACE\setup\ProjectSetup.wixproj -p:Configuration=Release -p:Platform=x86 -p:SolutionDir=$Env:GITHUB_WORKSPACE\
+      run: msbuild $Env:GITHUB_WORKSPACE\setup\ProjectSetup.wixproj -p:Configuration=Release -p:Platform=x86 -p:SolutionDir=$Env:GITHUB_WORKSPACE\ 
+    - run: signtool sign /f certificate.pfx /p "${{secrets.YV_CODESIGN_PFX_PASS}}" bin\Release\ProjectSetup.msi
     - name: Archive setup build artifact
       uses: actions/upload-artifact@v2
       with:
