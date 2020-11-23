@@ -16,7 +16,11 @@ jobs:
 #        dotnet-version: '3.1.x'
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
-    - name: Restore NuGet packages (ProjectSetup)
-      run: msbuild $Env:GITHUB_WORKSPACE\setup\ProjectSetup.wixproj /t:RestorePackages
+    - name: Setup and add nuget to PATH
+      uses: nuget/setup-nuget@v1
+    - name: Restore NuGet packages
+      run: nuget restore -SolutionDirectory $Env:GITHUB_WORKSPACE
+#    - name: Restore NuGet packages (ProjectSetup)
+#      run: msbuild $Env:GITHUB_WORKSPACE\setup\ProjectSetup.wixproj /t:RestorePackages
     - name: Build with msbuild
       run: msbuild $Env:GITHUB_WORKSPACE\setup\ProjectSetup.wixproj -p:configuration=Release
