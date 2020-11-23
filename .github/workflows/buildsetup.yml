@@ -24,3 +24,8 @@ jobs:
 #      run: msbuild $Env:GITHUB_WORKSPACE\setup\ProjectSetup.wixproj /t:RestorePackages
     - name: Build with msbuild
       run: msbuild $Env:GITHUB_WORKSPACE\setup\ProjectSetup.wixproj -p:Configuration=Release -p:Platform=x86 -p:SolutionDir=$Env:GITHUB_WORKSPACE\
+    - name: Archive setup build artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: project-setup
+        path: bin/*.msi
