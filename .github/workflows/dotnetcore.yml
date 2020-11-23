@@ -1,0 +1,20 @@
+name: Build WiX Setup
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+
+    runs-on: [windows-latest]
+
+    steps:
+    - name: Check out latest
+      uses: actions/checkout@v1
+#    - name: Setup .NET Core
+#      uses: actions/setup-dotnet@v1
+#      with:
+#        dotnet-version: '3.1.x'
+    - name: Restore NuGet packages (ProjectSetup)
+      run: msbuild $Env:GITHUB_WORKSPACE\setup\ProjectSetup.wixproj /t:RestorePackages
+    - name: Build with msbuild
+      run: msbuild $Env:GITHUB_WORKSPACE\setup\ProjectSetup.wixproj -p:configuration=Release

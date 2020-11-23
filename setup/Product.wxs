@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:difx='http://schemas.microsoft.com/wix/DifxAppExtension'>
+  <Product Id="*" Name="Wix Test" Language="1033" Version="1.0.0.0" Manufacturer="YV" UpgradeCode="C255B0C0-FA7E-41D0-B669-F2DEAF984E9F">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+
+    <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed." />
+
+    <Property Id="DriverInfPath" Value="h1_Driver.inf" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <!-- Installation folder -->
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="WixTest" />
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="README.TXT" Guid="{06F103E3-24AD-4CDF-8CC4-E445663AB8BA}">
+        <File Id="README.TXT" Name='README.TXT' DiskId='1' Source="..\assets\README.TXT" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="CompleteFeature" Title="Complete" Level="1" ConfigurableDirectory='INSTALLFOLDER'>
+      <ComponentRef Id="README.TXT" />
+    </Feature>
+
+    <Property Id="MSIUSEREALADMINDETECTION" Value="1" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    
+    <UIRef Id="WixUI_InstallDir" />
+  </Product>
+</Wix>

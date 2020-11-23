@@ -1,0 +1,1 @@
+WiX setup succeeded!
