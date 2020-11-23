@@ -23,3 +23,6 @@ bin/
 Bin/
 obj/
 Obj/
+
+#NuGet packages
+packages/
