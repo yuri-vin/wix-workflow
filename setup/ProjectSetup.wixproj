@@ -27,10 +27,15 @@
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
-      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <HintPath>$(WixExtDir)WixUIExtension.dll</HintPath>
       <Name>WixUIExtension</Name>
     </WixExtension>
   </ItemGroup>
+  <PropertyGroup>
+  	<WixToolPath>$(SolutionDir)packages\WiX.Toolset.UnofficialFork.3.11.2\tools\wix\</WixToolPath>
+    <WixTargetsPath>$(WixToolPath)Wix.targets</WixTargetsPath>
+    <WixTasksPath>$(WixToolPath)wixtasks.dll</WixTasksPath>
+  </PropertyGroup>
   <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
   <!-- Remove comment to sign installation
   <Target Name="SignCabs">
